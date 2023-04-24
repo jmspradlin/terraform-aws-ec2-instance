@@ -205,7 +205,7 @@ variable "tags" {
 variable "default_tags" {
   default = {
     source = "Terraform"
-    module = "aws-network"
+    module = "terraform-aws-ec2-instance"
   }
 }
 
