@@ -202,6 +202,13 @@ variable "tags" {
   default     = {}
 }
 
+variable "default_tags" {
+  default = {
+    source = "Terraform"
+    module = "aws-network"
+  }
+}
+
 variable "tenancy" {
   description = "The tenancy of the instance (if the instance is running in a VPC). Available values: default, dedicated, host."
   type        = string

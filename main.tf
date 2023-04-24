@@ -11,6 +11,13 @@ data "aws_ssm_parameter" "this" {
 
   name = var.ami_ssm_parameter
 }
+data "aws_caller_identity" "current" {}
+locals {
+  computed_tags = {
+    LastModifiedTime = "${timestamp()}"
+    LastModifiedBy   = "${data.aws_caller_identity.current.arn}"
+  }
+}
 
 ################################################################################
 # Instance
@@ -157,7 +164,7 @@ resource "aws_instance" "this" {
     delete = lookup(var.timeouts, "delete", null)
   }
 
-  tags        = merge({ "Name" = var.name }, var.tags)
+  tags        = merge({ "Name" = var.name }, var.default_tags, local.computed_tags, var.tags) 
   volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
 }
 
@@ -306,7 +313,7 @@ resource "aws_spot_instance_request" "this" {
     delete = lookup(var.timeouts, "delete", null)
   }
 
-  tags        = merge({ "Name" = var.name }, var.tags)
+  tags        = merge({ "Name" = var.name }, var.default_tags, local.computed_tags, var.tags)
   volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
 }
 
@@ -344,7 +351,7 @@ resource "aws_iam_role" "this" {
   permissions_boundary  = var.iam_role_permissions_boundary
   force_detach_policies = true
 
-  tags = merge(var.tags, var.iam_role_tags)
+  tags = merge(var.tags, var.default_tags, local.computed_tags, var.iam_role_tags)
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
@@ -363,7 +370,7 @@ resource "aws_iam_instance_profile" "this" {
   name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}-" : null
   path        = var.iam_role_path
 
-  tags = merge(var.tags, var.iam_role_tags)
+  tags = merge(var.tags, var.default_tags, local.computed_tags, var.iam_role_tags)
 
   lifecycle {
     create_before_destroy = true
