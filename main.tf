@@ -17,7 +17,7 @@ module "aws_instance01" {
   ami                    = var.instance_ami
   instance_type          = var.instance_type
   monitoring             = true
-  subnet_id              = var.subnet_id
+  subnet_id              = element(var.subnet_id, count.index)
   vpc_security_group_ids = var.vpc_security_group_ids
   tags                   = merge(var.default_tags, local.computed_tags, var.tags)
 }
