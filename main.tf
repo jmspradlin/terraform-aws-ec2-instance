@@ -10,7 +10,7 @@ module "aws_instance01" {
   count  = var.instance_count
   source = "terraform-aws-modules/ec2-instance/aws"
 
-  name                   = "instance-${formatdate("DD-MMM-YY", timestamp())}-${format("%02d", count.index + 1)}"
+  name                   = "${var.instance_name}-${formatdate("DD-MMM-YY", timestamp())}-${format("%02d", count.index + 1)}"
   ami                    = var.instance_ami
   instance_type          = var.instance_type
   monitoring             = true
