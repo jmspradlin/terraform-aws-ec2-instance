@@ -17,4 +17,5 @@ module "aws_instance01" {
   subnet_id              = element(var.subnet_id, count.index)
   vpc_security_group_ids = var.vpc_security_group_ids
   tags                   = merge(var.default_tags, local.computed_tags, var.tags)
+  ignore_ami_changes     = var.ignore_ami_changes
 }

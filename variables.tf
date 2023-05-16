@@ -22,3 +22,7 @@ variable "instance_type" {
 variable "key_name" {
   default = "testKey"
 }
+
+variable "ignore_ami_changes" {
+  default = true
+}
